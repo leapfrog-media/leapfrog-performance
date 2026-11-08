@@ -92,8 +92,7 @@ function update_settings(string $feature, array $values): void
  */
 function activate(): void
 {
-    require_once __DIR__ . '/bloat.php';
-    add_filter('leapfrog_performance_fields', __NAMESPACE__ . '\\bloat_fields');
+    // The plugin file has just run, so every switched-on feature's fields are known.
     if (get_option(OPTION_SETTINGS, false) === false) {
         $all = [];
         foreach (array_keys(field_definitions()) as $feature) {

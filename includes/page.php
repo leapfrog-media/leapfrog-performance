@@ -32,6 +32,7 @@ function notices(): array
         'saved' => 'Settings saved.',
         'features_saved' => 'Features saved.',
         'imported' => 'Settings imported. Check each tab, then switch off the same settings in the plugin they came from.',
+        'slugs_freed' => 'Media addresses freed.',
     ];
 }
 
@@ -104,7 +105,7 @@ function render_page(): void
  * A settings form for one feature, drawn from its field definitions:
  * sections of fields, each a switch, number or choice with a description.
  */
-function render_fields_form(string $feature, array $sections): void
+function render_fields_form(string $feature, array $sections, ?callable $extra = null): void
 {
     $fields = field_definitions()[$feature] ?? [];
     $values = settings($feature);
@@ -150,6 +151,7 @@ function render_fields_form(string $feature, array $sections): void
                 <?php endforeach; ?>
             </table>
         <?php endforeach; ?>
+        <?php if ($extra) { $extra($values); } ?>
         <div class="lfp-save-bar"><?php submit_button('Save Changes', 'primary', 'submit', false); ?> <span class="lfa-unsaved" hidden>Unsaved changes</span></div>
     </form>
     <?php
@@ -163,6 +165,8 @@ function save_fields_form(): void
         wp_die('Unknown settings.', '', ['response' => 400]);
     }
     $posted = isset($_POST['settings']) && is_array($_POST['settings']) ? wp_unslash($_POST['settings']) : [];
+    // A feature can turn its own form fields into settings (Media's size table).
+    $posted = (array) apply_filters('leapfrog_performance_posted', $posted, $feature);
     save_settings($feature, $posted);
     do_action('leapfrog_performance_saved', $feature);
     return_to_page('saved', ['tab' => $feature]);

@@ -3,7 +3,7 @@ Contributors: Leapfrog Media
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,11 +25,17 @@ clutter, block editor CSS, WordPress lazy loading, site search, comments,
 pingbacks, revisions kept, Heartbeat (admin, editor, site), autosave interval,
 the admin email check, password change emails and auto-update emails.
 
-== Moving from ASE and FlyingPress ==
-Features > Import settings lists what ASE and FlyingPress remove that
-Leapfrog's tabs cover, with what each setting would become. Only what those
-plugins actually do is offered, so nothing Leapfrog removes is put back.
-Afterwards, switch the same settings off in those plugins.
+Media: switch off media pages (and free up the page addresses media items
+hold), choose which image sizes are made and shown in the Bricks and media
+pickers, add the 1200 x 630 Social size, stop big image copies, hide captions on
+the site, allow AVIF uploads.
+
+== Moving from other plugins ==
+Features > Import settings lists what ASE, FlyingPress, Disable Media Pages,
+Disable Media Sizes and the Praxis mu-plugins do that Leapfrog's tabs cover,
+with what each setting would become. Only what those plugins actually do is
+offered, so nothing Leapfrog removes is put back. Afterwards, switch the same
+settings off in those plugins (or remove the mu-plugins).
 
 == Left to other plugins ==
 Log-in security (FluentAuth), image compression and resizing (ShortPixel),

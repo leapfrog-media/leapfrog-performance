@@ -18,6 +18,14 @@ function features(): array
             'boot' => __NAMESPACE__ . '\\bloat_boot',
             'render' => __NAMESPACE__ . '\\render_bloat_tab',
         ],
+        'media' => [
+            'label' => 'Media',
+            'description' => 'Media pages off, which image sizes are made and shown in the pickers, the Social size, captions and AVIF uploads.',
+            'off' => 'Media pages, image sizes and captions go back to WordPress’s own. Your choices are kept.',
+            'files' => ['media.php'],
+            'boot' => __NAMESPACE__ . '\\media_boot',
+            'render' => __NAMESPACE__ . '\\render_media_tab',
+        ],
     ];
 }
 
@@ -25,7 +33,6 @@ function features(): array
 function coming_features(): array
 {
     return [
-        '0.2' => 'Media: media pages off, image sizes (including Social), captions, AVIF uploads',
         '0.3' => 'Security: hardening beside FluentAuth, author pages off',
         '0.4' => 'Load only where used: choose where each plugin’s CSS and JavaScript load',
         '0.5' => 'Site tools: redirects and 404 log, maintenance mode, site password, robots.txt, sitemap, rollback',

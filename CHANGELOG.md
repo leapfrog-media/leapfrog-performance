@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 — 2026-11-08
+
+Media, replacing Disable Media Pages, Disable Media Sizes, the Praxis mu-plugins pl-social-image-size and pl-hide-captions, and the "Bricks Image Size Options" snippet.
+
+- **Switch off media pages** (standard: on): media pages show "not found" (WordPress no longer redirects them to a guessed address), links to them go to the file, and new uploads get a random address so they don't take page addresses. **Free up media addresses** gives up to 500 existing media items a random address at a time, without changing their files, usage or "last modified" date.
+- **Image sizes** table: choose which sizes WordPress makes (Thumbnail always stays) and which appear in the Bricks and media size pickers (Full included). Applies to new uploads.
+- **Add the Social image size** (1200 × 630, cropped; standard: on), shown as "Social" in the pickers.
+- **No big image copies** (WordPress's "-scaled" copy of uploads over 2560 px), **Hide image captions on the site**, **Allow AVIF uploads** (standard: on).
+- **Import** now covers several tabs and sources: ASE (AVIF, disabled sizes), Disable Media Pages, Disable Media Sizes (sizes and big image copies) and the two Praxis mu-plugins, in one table with a "From" column.
+- Feature fields can add their own rows to a tab's form, and turn posted form fields into settings (`leapfrog_performance_posted`).
+
 ## 0.1.0 — 2026-11-08
 
 Foundations and Bloat.
