@@ -2,14 +2,15 @@
 /**
  * Plugin Name:       Leapfrog Performance
  * Plugin URI:        https://github.com/leapfrog-media/leapfrog-performance
- * Description:       The Leapfrog Media performance and hardening plugin: removes what WordPress loads but your site doesn't use holds the media settings and adds hardening beside FluentAuth and loads plugin files only where they are used, plus redirects, site access, search engine settings and rollback. Leapfrog > Leapfrog Performance.
- * Version:           0.5.0
+ * Description:       The Leapfrog Media performance and hardening plugin: removes what WordPress loads but your site doesn't use, holds the media settings, adds hardening beside FluentAuth and loads plugin files only where they are used, plus redirects, site access, search engine settings and rollback. Leapfrog > Leapfrog Performance.
+ * Version:           0.6.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Leapfrog Media
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       leapfrog-performance
+ * Update URI:        https://github.com/leapfrog-media/leapfrog-performance
  */
 
 namespace Leapfrog\Performance;
@@ -18,7 +19,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VERSION = '0.5.0';
+const VERSION = '0.6.0';
 const FILE = __FILE__;
 
 /** Settings screen: Leapfrog > Leapfrog Performance (admin.php?page=leapfrog-performance). */
@@ -35,6 +36,8 @@ require_once __DIR__ . '/includes/settings.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/features.php';
 require_once __DIR__ . '/includes/import.php';
+require_once __DIR__ . '/includes/github-updater.php';
+require_once __DIR__ . '/includes/updates.php';
 
 // A feature that is switched off is not loaded at all.
 foreach (features() as $id => $feature) {

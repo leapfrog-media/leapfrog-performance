@@ -33,6 +33,9 @@ function notices(): array
         'features_saved' => 'Features saved.',
         'imported' => 'Settings imported. Check each tab, then switch off the same settings in the plugin they came from.',
         'slugs_freed' => 'Media addresses freed.',
+        'updates_checked' => 'GitHub has been asked for updates.',
+        'token_saved' => 'GitHub token saved, and GitHub asked for updates.',
+        'token_removed' => 'GitHub token removed.',
     ];
 }
 
@@ -40,6 +43,7 @@ function errors(): array
 {
     return [
         'import_none' => 'Nothing was chosen to import.',
+        'token_invalid' => 'That doesn’t look like a GitHub token (they are letters, numbers and underscores, like github_pat_…). Nothing was saved.',
     ];
 }
 
@@ -53,6 +57,7 @@ function tabs(): array
         }
     }
     $tabs['features'] = ['label' => 'Features', 'render' => __NAMESPACE__ . '\\render_features_tab'];
+    $tabs['updates'] = ['label' => 'Updates', 'render' => __NAMESPACE__ . '\\render_updates_tab'];
     return $tabs;
 }
 

@@ -3,13 +3,13 @@ Contributors: Leapfrog Media
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 The Leapfrog Media performance and hardening plugin. It removes what WordPress
-loads but your site doesn't use; media, security, per-plugin asset rules and
-site tools follow in later versions.
+loads but your site doesn't use; holds the media settings, adds hardening beside
+FluentAuth, loads plugin files only where used, and has site tools.
 
 == Installation ==
 1. Install and activate the plugin. A site with no Leapfrog Performance
@@ -55,6 +55,15 @@ settings off in those plugins (or remove the mu-plugins).
 == Left to other plugins ==
 Log-in security (FluentAuth), image compression and resizing (ShortPixel),
 caching and CSS/JavaScript optimisation (FlyingPress).
+
+== Updates ==
+Updates come from GitHub through WordPress's own updater (Dashboard > Updates,
+the Plugins screen, automatic updates). The newest version tag (v1.2.3) on
+github.com/leapfrog-media/leapfrog-performance is the newest version, so a release is just a
+tagged commit, pushed. Public repositories need nothing more. Private ones need
+a GitHub token that can read them: LEAPFROG_GITHUB_TOKEN in wp-config.php, or
+the Updates tab of Leapfrog Admin or Leapfrog Performance (one token covers all
+Leapfrog plugins). A copy that is a Git working folder is never updated.
 
 == Changelog ==
 See CHANGELOG.md.
