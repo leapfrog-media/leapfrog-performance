@@ -30,6 +30,17 @@
 .lfp-import-same td { color: #646970; }
 .lfp-coming { list-style: disc; margin-left: 20px; }
 
+/* Load only where used */
+.lfp-assets-table { max-width: 1100px; }
+.lfp-assets-table td { vertical-align: top; }
+.lfp-assets-table select { margin-bottom: 6px; }
+.lfp-assets-pages[hidden] { display: none; }
+.lfp-handles { display: block; margin-top: 6px; font-size: 11px; word-break: break-word; }
+
+/* Image sizes */
+.lfp-size-table { max-width: 960px; margin-bottom: 16px; }
+.lfp-size-table td { vertical-align: middle; }
+
 @media (max-width: 782px) {
     .lfp-form-table th { width: auto; }
 }

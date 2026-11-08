@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 — 2026-11-08
+
+Load only where used, replacing the Praxis mu-plugin pl-latepoint-assets for any plugin.
+
+- **Load only where used** tab: for each plugin, its CSS and JavaScript load everywhere (as now), only at chosen addresses (/book/, /shop/*, / for the home page), or nowhere on the site. The plugin itself keeps running; whole plugins are never switched off.
+- Leapfrog notes which plugin files each page loads while administrators browse the site (option `leapfrog_performance_assets_seen`); files a plugin adds later are also caught by their address. Rules: option `leapfrog_performance_assets`.
+- The admin, the Bricks builder and the Customizer always load everything. `?lfp-all-assets=1` (administrators) shows a page with no rules, for comparing. Leapfrog's own plugins aren't listed.
+- The importer notes when pl-latepoint-assets is present, so its pages can be set as a LatePoint rule.
+
 ## 0.3.0 — 2026-11-08
 
 Security: hardening beside FluentAuth (which keeps log-in limits, two-factor, passkeys, XML-RPC, application passwords, hiding usernames, IP rules, file scans and the audit log).

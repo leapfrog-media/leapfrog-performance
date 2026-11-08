@@ -3,7 +3,7 @@ Contributors: Leapfrog Media
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,10 @@ the site, allow AVIF uploads.
 Security (beside FluentAuth): switch off the file editors, security headers,
 optional HSTS, hide the WordPress version, hide the users list from visitors,
 switch off author pages, vague log-in errors.
+
+Load only where used: for each plugin, its CSS and JavaScript load everywhere,
+only at chosen addresses, or nowhere on the site. Plugins appear once their
+files have been seen on the site; ?lfp-all-assets=1 shows a page without rules.
 
 == Moving from other plugins ==
 Features > Import settings lists what ASE, FlyingPress, Disable Media Pages,

@@ -34,6 +34,14 @@ function features(): array
             'boot' => __NAMESPACE__ . '\\security_boot',
             'render' => __NAMESPACE__ . '\\render_security_tab',
         ],
+        'assets' => [
+            'label' => 'Load only where used',
+            'description' => 'For each plugin, choose where its CSS and JavaScript load on the site: everywhere, only at chosen addresses, or nowhere.',
+            'off' => 'Every plugin’s files load wherever the plugin puts them. Your rules are kept.',
+            'files' => ['assets.php'],
+            'boot' => __NAMESPACE__ . '\\assets_boot',
+            'render' => __NAMESPACE__ . '\\render_assets_tab',
+        ],
     ];
 }
 
@@ -41,7 +49,6 @@ function features(): array
 function coming_features(): array
 {
     return [
-        '0.4' => 'Load only where used: choose where each plugin’s CSS and JavaScript load',
         '0.5' => 'Site tools: redirects and 404 log, maintenance mode, site password, robots.txt, sitemap, rollback',
     ];
 }
