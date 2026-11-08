@@ -2,7 +2,7 @@
 
 ## 0.6.0 — 2026-11-08
 
-- **Updates from GitHub**, shared with Leapfrog Admin and Leapfrog Framework: the plugin updates through WordPress's own updater from github.com/leapfrog-media/leapfrog-performance (newest version tag). An **Updates** tab shows each Leapfrog plugin's versions and holds the GitHub token private repositories need (or `LEAPFROG_GITHUB_TOKEN` in wp-config.php). A Git working folder is never updated. Code: `includes/github-updater.php`, identical to Leapfrog Admin's apart from the namespace.
+- **Updates from GitHub**, shared with Leapfrog Admin and Leapfrog Framework: the plugin updates through WordPress's own updater from github.com/leapfrog-media/leapfrog-performance (the Version in the plugin file on the main branch; no tags). An **Updates** tab shows each Leapfrog plugin's versions and holds the GitHub token private repositories need (or `LEAPFROG_GITHUB_TOKEN` in wp-config.php). A Git working folder is never updated. Code: `includes/github-updater.php`, identical to Leapfrog Admin's apart from the namespace.
 - The plugin description reads properly.
 
 ## 0.5.0 — 2026-11-08

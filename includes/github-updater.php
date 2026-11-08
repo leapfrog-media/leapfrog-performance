@@ -13,10 +13,11 @@ if (!defined('ABSPATH')) { exit; }
  * - The plugin header's "Update URI: https://github.com/leapfrog-media/<repo>"
  *   tells WordPress not to ask WordPress.org; it asks the
  *   update_plugins_github.com filter instead (offer_update below).
- * - The newest version tag in the repo (v1.2.3) is the newest version. A tag is
- *   all a release needs: create it on the commit and push.
- * - WordPress's own updater installs GitHub's zip of that tag; the zip's folder
- *   is renamed to the plugin's folder on the way in.
+ * - The Version in the plugin file on the main branch is the newest version, so
+ *   pushing a commit that raises it is the release (no tags). Only finished
+ *   versions go to main.
+ * - WordPress's own updater installs GitHub's zip of that exact commit; the
+ *   zip's folder is renamed to the plugin's folder on the way in.
  * - A private repo needs a GitHub token that can read it (a public one works
  *   without, within GitHub's hourly limit per server). One token serves every
  *   Leapfrog plugin: the LEAPFROG_GITHUB_TOKEN constant in wp-config.php, or
@@ -29,6 +30,7 @@ final class GitHubUpdater
 {
     public const OWNER = 'leapfrog-media';
     public const OPTION_TOKEN = 'leapfrog_github_token';
+    public const BRANCH = 'main';
     private const CACHE_HOURS = 6;
 
     /** @var string */
@@ -128,51 +130,63 @@ final class GitHubUpdater
     }
 
     /**
-     * The newest version on GitHub, cached for a few hours.
+     * The newest version on GitHub (the main branch), cached for a few hours.
+     * `ref` is the commit it came from, so the download is exactly that version.
      *
-     * @return array{version:string,tag:string,package:string,error:string,checked:int}
+     * @return array{version:string,ref:string,package:string,error:string,checked:int}
      */
     public function latest(bool $refresh = false): array
     {
         $key = 'leapfrog_github_' . $this->repo;
         $cached = get_site_transient($key);
-        if (!$refresh && is_array($cached) && isset($cached['version'], $cached['tag'], $cached['package'], $cached['error'], $cached['checked'])) { return $cached; }
+        if (!$refresh && is_array($cached) && isset($cached['version'], $cached['ref'], $cached['package'], $cached['error'], $cached['checked'])) { return $cached; }
 
-        $result = ['version' => '', 'tag' => '', 'package' => '', 'error' => '', 'checked' => time()];
-        $hasToken = self::token() !== '';
+        $result = ['version' => '', 'ref' => '', 'package' => '', 'error' => '', 'checked' => time()];
         // Public repos work without a token; private ones need one (add_token adds it).
-        $response = wp_remote_get($this->api_url('tags?per_page=100'), ['timeout' => 10, 'headers' => ['Accept' => 'application/vnd.github+json']]);
-        $code = (int) wp_remote_retrieve_response_code($response);
-        if (is_wp_error($response)) {
-            $result['error'] = 'GitHub couldn’t be reached (' . $response->get_error_message() . ').';
-        } elseif ($code === 401) {
-            $result['error'] = 'GitHub refused the token: it may be mistyped, expired or withdrawn.';
-        } elseif (($code === 403 || $code === 429) && wp_remote_retrieve_header($response, 'x-ratelimit-remaining') === '0') {
-            $result['error'] = $hasToken
-                ? 'GitHub’s limit on checks was reached. It will be asked again within the hour.'
-                : 'GitHub’s limit on checks without a token was reached (servers shared with other sites use it up faster). It will be asked again within the hour; a token avoids this.';
-        } elseif ($code === 403 || $code === 404) {
-            $result['error'] = $hasToken
-                ? 'The token can’t read ' . self::OWNER . '/' . $this->repo . '. Give it access to this repository.'
-                : 'GitHub can’t find ' . self::OWNER . '/' . $this->repo . '. If the repository is private, add a GitHub token.';
-        } elseif ($code !== 200) {
-            $result['error'] = 'GitHub answered with an error (' . $code . ').';
-        } else {
-            $tags = json_decode((string) wp_remote_retrieve_body($response), true);
-            foreach (is_array($tags) ? $tags : [] as $tag) {
-                $name = is_array($tag) && isset($tag['name']) ? (string) $tag['name'] : '';
-                if (!preg_match('/^v?(\d+\.\d+\.\d+)$/D', $name, $m)) { continue; }
-                if ($result['version'] === '' || version_compare($m[1], $result['version'], '>')) {
+        $response = wp_remote_get($this->api_url('commits/' . self::BRANCH), ['timeout' => 10, 'headers' => ['Accept' => 'application/vnd.github+json']]);
+        $result['error'] = $this->problem($response);
+        if ($result['error'] === '') {
+            $commit = json_decode((string) wp_remote_retrieve_body($response), true);
+            $sha = is_array($commit) && isset($commit['sha']) && is_string($commit['sha']) && preg_match('/^[0-9a-f]{40}$/D', $commit['sha']) ? $commit['sha'] : '';
+            if ($sha === '') {
+                $result['error'] = 'GitHub’s answer couldn’t be read.';
+            } else {
+                $response = wp_remote_get($this->api_url('contents/' . rawurlencode(basename($this->file)) . '?ref=' . $sha), ['timeout' => 10, 'headers' => ['Accept' => 'application/vnd.github.raw+json']]);
+                $result['error'] = $this->problem($response);
+                // The same "Version:" line WordPress reads from the plugin header.
+                if ($result['error'] === '' && preg_match('/^[ \t\/*#@]*Version:[ \t]*(\d+\.\d+\.\d+)[ \t]*$/mi', substr((string) wp_remote_retrieve_body($response), 0, 8192), $m)) {
                     $result['version'] = $m[1];
-                    $result['tag'] = $name;
-                    $result['package'] = $this->api_url('zipball/' . rawurlencode($name));
+                    $result['ref'] = $sha;
+                    $result['package'] = $this->api_url('zipball/' . $sha);
+                } elseif ($result['error'] === '') {
+                    $result['error'] = 'The plugin file on GitHub has no version number (like 1.2.3).';
                 }
             }
-            if ($result['version'] === '') { $result['error'] = 'There are no version tags (like v1.2.3) on GitHub yet.'; }
         }
         // Problems are asked about again sooner than answers.
         set_site_transient($key, $result, $result['error'] !== '' ? HOUR_IN_SECONDS : self::CACHE_HOURS * HOUR_IN_SECONDS);
         return $result;
+    }
+
+    /** What went wrong with a request to GitHub, in plain words; '' when it worked. */
+    private function problem($response): string
+    {
+        if (is_wp_error($response)) { return 'GitHub couldn’t be reached (' . $response->get_error_message() . ').'; }
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $hasToken = self::token() !== '';
+        if ($code === 200) { return ''; }
+        if ($code === 401) { return 'GitHub refused the token: it may be mistyped, expired or withdrawn.'; }
+        if (($code === 403 || $code === 429) && wp_remote_retrieve_header($response, 'x-ratelimit-remaining') === '0') {
+            return $hasToken
+                ? 'GitHub’s limit on checks was reached. It will be asked again within the hour.'
+                : 'GitHub’s limit on checks without a token was reached (servers shared with other sites use it up faster). It will be asked again within the hour; a token avoids this.';
+        }
+        if ($code === 403 || $code === 404 || $code === 422) {
+            return $hasToken
+                ? 'The token can’t read ' . self::OWNER . '/' . $this->repo . ' (or it has no ' . self::BRANCH . ' branch). Give the token access to this repository.'
+                : 'GitHub can’t find ' . self::OWNER . '/' . $this->repo . ' (or its ' . self::BRANCH . ' branch). If the repository is private, add a GitHub token.';
+        }
+        return 'GitHub answered with an error (' . $code . ').';
     }
 
     /** WordPress asks here, because of the plugin's Update URI. */
@@ -226,8 +240,8 @@ final class GitHubUpdater
         $latest = $this->latest();
         // The changelog of the newest version, read from GitHub; the installed one if GitHub can't be read.
         $markdown = '';
-        if ($latest['tag'] !== '') {
-            $response = wp_remote_get($this->api_url('contents/CHANGELOG.md?ref=' . rawurlencode($latest['tag'])), ['timeout' => 10, 'headers' => ['Accept' => 'application/vnd.github.raw+json']]);
+        if ($latest['ref'] !== '') {
+            $response = wp_remote_get($this->api_url('contents/CHANGELOG.md?ref=' . $latest['ref']), ['timeout' => 10, 'headers' => ['Accept' => 'application/vnd.github.raw+json']]);
             if (!is_wp_error($response) && (int) wp_remote_retrieve_response_code($response) === 200) { $markdown = (string) wp_remote_retrieve_body($response); }
         }
         if ($markdown === '' && file_exists(dirname($this->file) . '/CHANGELOG.md')) { $markdown = (string) file_get_contents(dirname($this->file) . '/CHANGELOG.md'); }
