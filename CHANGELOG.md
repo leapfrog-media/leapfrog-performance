@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.1 — 2026-11-08
+
+- The shared Leapfrog menu orders Leapfrog Framework's new Header Builder after Leapfrog Framework (the order list is the same in every Leapfrog plugin).
+
 ## 0.7.0 — 2026-11-08
 
 Leaner sites: five additions from a check of what a lean site still loads.
