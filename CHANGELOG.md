@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 — 2026-11-08
+
+Security: hardening beside FluentAuth (which keeps log-in limits, two-factor, passkeys, XML-RPC, application passwords, hiding usernames, IP rules, file scans and the audit log).
+
+- **Switch off the file editors** (standard: on): defines `DISALLOW_FILE_EDIT`, unless wp-config.php already sets it (the tab says so). Plugin and theme updates still work.
+- **Add security headers** (on): `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN` (the Bricks builder still works), `Referrer-Policy: strict-origin-when-cross-origin`, on the site, the admin and the log-in page. **Always use HTTPS (HSTS)** is separate and off by default.
+- **Hide the WordPress version** (on): no generator tag, and WordPress's own file addresses carry a code instead of the version (it still changes on updates).
+- **Hide the users list from visitors** (on): `/wp-json/wp/v2/users` only for logged-in people.
+- **Switch off author pages** (on): /author/name/ and ?author=1 go to the home page; author links point there too.
+- **Vague log-in errors** (on): wrong usernames and wrong passwords get the same message; lockout and other messages are unchanged.
+- Import: ASE's "Disable Plugin and Theme Editor".
+- Fix (Bloat): Heartbeat off on the site no longer unregisters the Heartbeat script (WordPress 7 warned that the session-expired check needs it); both are now simply not loaded.
+
 ## 0.2.0 — 2026-11-08
 
 Media, replacing Disable Media Pages, Disable Media Sizes, the Praxis mu-plugins pl-social-image-size and pl-hide-captions, and the "Bricks Image Size Options" snippet.

@@ -233,11 +233,19 @@ function bloat_heartbeat(array $s): void
         if (is_numeric($value)) { $settings['interval'] = (int) $value; }
         return $settings;
     });
+    // Dequeued rather than removed: removing it breaks scripts that list it as needed.
+    // The "session expired" check only works with Heartbeat, so it goes too.
     $stop = static function () use ($s, $place) {
-        if (($s['heartbeat_' . $place()] ?? '') === 'off') { wp_deregister_script('heartbeat'); }
+        if (($s['heartbeat_' . $place()] ?? '') === 'off') {
+            wp_dequeue_script('wp-auth-check');
+            wp_dequeue_style('wp-auth-check');
+            remove_action('admin_print_footer_scripts', 'wp_auth_check_html', 5);
+            remove_action('wp_print_footer_scripts', 'wp_auth_check_html', 5);
+            wp_dequeue_script('heartbeat');
+        }
     };
-    add_action('admin_enqueue_scripts', $stop, 1);
-    add_action('wp_enqueue_scripts', $stop, 1);
+    add_action('admin_enqueue_scripts', $stop, 999);
+    add_action('wp_enqueue_scripts', $stop, 999);
 }
 
 function render_bloat_tab(): void

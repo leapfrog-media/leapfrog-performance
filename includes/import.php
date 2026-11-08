@@ -90,6 +90,7 @@ function import_proposals(): array
                 $add('bloat', 'comments', 'ASE', 'off');
             }
         }
+        $add('security', 'file_editor', 'ASE', $flag('disable_plugin_theme_editor'));
         $add('media', 'avif', 'ASE', $flag('enable_avif_upload'));
         $add('media', 'sizes_off', 'ASE', array_keys(array_filter((array) ($ase['disabled_image_sizes'] ?? []))));
     }

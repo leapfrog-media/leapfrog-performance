@@ -3,7 +3,7 @@ Contributors: Leapfrog Media
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,10 @@ Media: switch off media pages (and free up the page addresses media items
 hold), choose which image sizes are made and shown in the Bricks and media
 pickers, add the 1200 x 630 Social size, stop big image copies, hide captions on
 the site, allow AVIF uploads.
+
+Security (beside FluentAuth): switch off the file editors, security headers,
+optional HSTS, hide the WordPress version, hide the users list from visitors,
+switch off author pages, vague log-in errors.
 
 == Moving from other plugins ==
 Features > Import settings lists what ASE, FlyingPress, Disable Media Pages,

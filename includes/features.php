@@ -26,6 +26,14 @@ function features(): array
             'boot' => __NAMESPACE__ . '\\media_boot',
             'render' => __NAMESPACE__ . '\\render_media_tab',
         ],
+        'security' => [
+            'label' => 'Security',
+            'description' => 'Hardening beside FluentAuth: no file editors, security headers, hidden WordPress version and users list, author pages off, vague log-in errors.',
+            'off' => 'These protections stop; FluentAuth’s carry on. Your choices are kept.',
+            'files' => ['security.php'],
+            'boot' => __NAMESPACE__ . '\\security_boot',
+            'render' => __NAMESPACE__ . '\\render_security_tab',
+        ],
     ];
 }
 
@@ -33,7 +41,6 @@ function features(): array
 function coming_features(): array
 {
     return [
-        '0.3' => 'Security: hardening beside FluentAuth, author pages off',
         '0.4' => 'Load only where used: choose where each plugin’s CSS and JavaScript load',
         '0.5' => 'Site tools: redirects and 404 log, maintenance mode, site password, robots.txt, sitemap, rollback',
     ];
