@@ -1,0 +1,35 @@
+/* Leapfrog > Leapfrog Performance: page frame, settings forms, Features and import. */
+.lfp-settings { max-width: 1360px; }
+.lfp-version { font-size: 13px; font-weight: 400; color: #646970; margin-left: 6px; vertical-align: middle; }
+.lfp-tabs { margin-bottom: 16px; }
+.lfp-settings .notice { margin: 12px 0; }
+.lfp-narrow-text { max-width: 960px; }
+
+/* Switches (tick boxes drawn as on/off switches) */
+.lfp-settings input[type="checkbox"].lfp-toggle { appearance: none; -webkit-appearance: none; position: relative; width: 36px; height: 20px; margin: 0; border: 0; border-radius: 10px; background: #8c8f94; box-shadow: none; cursor: pointer; transition: background .15s; vertical-align: middle; }
+.lfp-settings input[type="checkbox"].lfp-toggle::before { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; margin: 0; border-radius: 50%; background: #fff; transition: transform .15s; }
+.lfp-settings input[type="checkbox"].lfp-toggle:checked { background: var(--wp-admin-theme-color, #2271b1); }
+.lfp-settings input[type="checkbox"].lfp-toggle:checked::before { content: ""; transform: translateX(16px); }
+.lfp-settings input[type="checkbox"].lfp-toggle:focus-visible { outline: 2px solid var(--wp-admin-theme-color, #2271b1); outline-offset: 2px; }
+
+/* Settings forms */
+.lfp-fields-form h2 { margin-top: 28px; }
+.lfp-form-table { max-width: 960px; }
+.lfp-form-table th { width: 260px; }
+.lfp-form-table .description { max-width: 620px; }
+.lfp-list-choice { display: inline-block; margin: 0 20px 6px 0; }
+.lfp-save-bar { position: sticky; bottom: 0; z-index: 5; display: flex; align-items: center; gap: 12px; margin: 8px 0 24px; padding: 12px 0; background: #f0f0f1; border-top: 1px solid #dcdcde; }
+.lfa-unsaved { color: #8a4b00; font-weight: 600; }
+.lfa-unsaved[hidden] { display: none; }
+
+/* Features and import */
+.lfp-feature-table, .lfp-import-table { max-width: 960px; }
+.lfp-feature-table td { vertical-align: middle; }
+.lfp-feature-table .lfp-feature-switch { width: 56px; text-align: center; }
+.lfp-import-table td, .lfp-import-table th { vertical-align: middle; }
+.lfp-import-same td { color: #646970; }
+.lfp-coming { list-style: disc; margin-left: 20px; }
+
+@media (max-width: 782px) {
+    .lfp-form-table th { width: auto; }
+}
