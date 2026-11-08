@@ -33,6 +33,13 @@ function bloat_fields(array $fields): array
         'block_css' => ['type' => 'bool', 'default' => false, 'label' => 'Block editor CSS', 'help' => 'Removes WordPress’s block styles and global styles. Switch this on only if no page shows content written in the block editor; Bricks pages don’t need it.'],
         'wp_lazy_load' => ['type' => 'bool', 'default' => $flyingPress, 'label' => 'WordPress lazy loading', 'help' => 'Switches off WordPress’s own lazy loading, for sites where FlyingPress lazy loads images instead.'],
         'search' => ['type' => 'bool', 'default' => false, 'label' => 'Site search', 'help' => 'Turns off WordPress search: search addresses (?s=) go to the home page. For sites without a search box.'],
+        'speculative' => ['type' => 'choice', 'default' => 'default', 'label' => 'Loading the next page early', 'choices' => ['default' => 'WordPress’s own (when a visitor is about to click)', 'off' => 'Off', 'moderate' => 'Sooner (when the pointer rests on a link)', 'prerender' => 'Fastest (build the page when the pointer rests on a link)'], 'help' => 'WordPress starts fetching a page just before a visitor clicks a link to it, so it opens almost at once. Logged-in people never get it. While FlyingPress’s link preloading is on, FlyingPress does this instead and this setting is skipped.'],
+        'gravatar' => ['type' => 'bool', 'default' => true, 'label' => 'Gravatar', 'help' => 'WordPress asks gravatar.com for every profile picture, which is an outside request that sends a coded copy of the person’s email address. Switched on, people without a picture chosen in Leapfrog Admin get a plain default picture instead.'],
+        // In the block editor
+        'editor_patterns' => ['type' => 'bool', 'default' => true, 'label' => 'Ready-made patterns', 'help' => 'Stops the editor fetching patterns from WordPress.org each time it opens, and removes WordPress’s own sample patterns. Patterns you made yourself stay.'],
+        'editor_block_directory' => ['type' => 'bool', 'default' => true, 'label' => 'Plugin suggestions', 'help' => 'Stops the editor offering to install plugins from WordPress.org when a block search finds nothing.'],
+        'editor_openverse' => ['type' => 'bool', 'default' => true, 'label' => 'Openverse image search', 'help' => 'Removes the free stock image search from the editor’s Media panel.'],
+        'page_block_editor' => ['type' => 'bool', 'default' => false, 'label' => 'Block editor for pages', 'help' => 'Pages are built in Bricks, so they open in the simple classic editor instead (title, text and the Edit with Bricks button). Posts keep the block editor.'],
         // Comments and pings
         'comments' => ['type' => 'choice', 'default' => 'off', 'label' => 'Comments', 'choices' => ['keep' => 'Keep comments', 'off' => 'Off everywhere', 'some' => 'Off for the content types ticked below'], 'help' => 'Off closes comment forms, hides existing comments and comment feeds and, when off everywhere, removes the Comments menu.'],
         'comments_types' => ['type' => 'list', 'default' => [], 'label' => 'Comments off for', 'choices' => $types, 'help' => 'Used when Comments is set to the ticked content types.'],
@@ -145,6 +152,41 @@ function bloat_boot(): void
         add_action('admin_bar_menu', static function ($bar) { if (!is_admin()) { $bar->remove_node('search'); } }, 999);
     }
 
+    if ($s['speculative'] !== 'default') {
+        // FlyingPress switches WordPress's own off (null) while its link preloading is on; leave that alone.
+        $mode = $s['speculative'];
+        add_filter('wp_speculation_rules_configuration', static function ($config) use ($mode) {
+            if (flying_press_preloads_links() || is_user_logged_in()) { return $config; }
+            if ($mode === 'off') { return null; }
+            return ['mode' => $mode === 'prerender' ? 'prerender' : 'prefetch', 'eagerness' => 'moderate'];
+        }, 20);
+    }
+
+    if ($s['gravatar']) {
+        // After Leapfrog Admin's own pictures (priority 10), which set a URL first.
+        add_filter('pre_get_avatar_data', static function ($args) {
+            if (empty($args['url'])) {
+                $args['url'] = asset_url('assets/avatar.svg');
+                $args['found_avatar'] = false;
+            }
+            return $args;
+        }, 20);
+    }
+
+    if ($s['editor_patterns']) {
+        add_filter('should_load_remote_block_patterns', '__return_false');
+        add_action('after_setup_theme', static function () { remove_theme_support('core-block-patterns'); }, 99);
+    }
+    if ($s['editor_block_directory']) {
+        remove_action('enqueue_block_editor_assets', 'wp_enqueue_editor_block_directory_assets');
+    }
+    if ($s['editor_openverse']) {
+        add_filter('block_editor_settings_all', static function ($settings) { $settings['enableOpenverseMediaCategory'] = false; return $settings; });
+    }
+    if ($s['page_block_editor']) {
+        add_filter('use_block_editor_for_post_type', static function ($use, $type) { return $type === 'page' ? false : $use; }, 20, 2);
+    }
+
     bloat_comments($s);
 
     if ($s['pingbacks']) {
@@ -185,6 +227,14 @@ function bloat_boot(): void
         add_filter('auto_theme_update_send_email', '__return_false');
         add_filter('auto_core_update_send_email', static function ($send, $type) { return $type === 'success' ? false : $send; }, 10, 2);
     }
+}
+
+/** Whether FlyingPress is on and loads linked pages early itself. */
+function flying_press_preloads_links(): bool
+{
+    if (!in_array('flying-press/flying-press.php', (array) get_option('active_plugins', []), true)) { return false; }
+    $config = get_option('FLYING_PRESS_CONFIG', []);
+    return is_array($config) && !empty($config['cache_link_prefetch']);
 }
 
 /** Comments off everywhere, or for some content types. */
@@ -250,9 +300,13 @@ function bloat_heartbeat(array $s): void
 
 function render_bloat_tab(): void
 {
-    echo '<p class="lfp-narrow-text">What WordPress loads on every page and in the admin that most Leapfrog sites don’t use. Switched on = removed. XML-RPC is switched off in FluentAuth.</p>';
+    echo '<p class="lfp-narrow-text">What WordPress loads on every page and in the admin that most Leapfrog sites don’t use. Switched on = removed. XML-RPC and application passwords are switched off in FluentAuth.</p>';
+    if (flying_press_preloads_links()) {
+        echo '<p class="description lfp-narrow-text">FlyingPress’s link preloading is on, so FlyingPress loads the next page early and “Loading the next page early” is skipped.</p>';
+    }
     render_fields_form('bloat', [
-        'On the site' => ['emoji', 'embeds', 'feeds', 'jquery_migrate', 'dashicons', 'head_clutter', 'block_css', 'wp_lazy_load', 'search'],
+        'On the site' => ['emoji', 'embeds', 'feeds', 'jquery_migrate', 'dashicons', 'head_clutter', 'block_css', 'wp_lazy_load', 'search', 'speculative', 'gravatar'],
+        'In the block editor' => ['editor_patterns', 'editor_block_directory', 'editor_openverse', 'page_block_editor'],
         'Comments and pings' => ['comments', 'comments_types', 'pingbacks'],
         'In the admin' => ['revisions', 'heartbeat_admin', 'heartbeat_editor', 'heartbeat_site', 'autosave'],
         'Emails' => ['admin_email_check', 'password_admin_email', 'password_user_email', 'auto_update_emails'],

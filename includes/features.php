@@ -74,6 +74,22 @@ function features(): array
             'boot' => __NAMESPACE__ . '\\rollback_boot',
             'render' => __NAMESPACE__ . '\\render_rollback_tab',
         ],
+        'cron' => [
+            'label' => 'Scheduled tasks',
+            'description' => 'Check how WordPress’s scheduled tasks run, and run them from the host’s timer instead of visitors’ page loads.',
+            'off' => 'Page loads start scheduled tasks again (unless wp-config.php says otherwise). Your settings are kept.',
+            'files' => ['cron.php'],
+            'boot' => __NAMESPACE__ . '\\cron_boot',
+            'render' => __NAMESPACE__ . '\\render_cron_tab',
+        ],
+        'tidy' => [
+            'label' => 'Tidy up',
+            'description' => 'Delete image copies in sizes no longer made, and settings and tables left behind by removed plugins.',
+            'off' => 'The Tidy up tab is hidden. Nothing else changes.',
+            'files' => ['tidy.php'],
+            'boot' => __NAMESPACE__ . '\\tidy_boot',
+            'render' => __NAMESPACE__ . '\\render_tidy_tab',
+        ],
     ];
 }
 

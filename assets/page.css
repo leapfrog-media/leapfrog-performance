@@ -57,6 +57,15 @@
 .lfp-referer { color: #646970; word-break: break-all; }
 .lfp-rollback-pick, .lfp-rollback-run { margin: 16px 0; }
 
+/* Scheduled tasks and Tidy up */
+.lfp-cron-table, .lfp-tidy-table { max-width: 960px; margin-bottom: 8px; }
+.lfp-cron-table th { width: 260px; font-weight: 600; }
+.lfp-tidy-table td, .lfp-tidy-table th { vertical-align: top; }
+.lfp-tidy-table .check-column { width: 2.2em; padding-top: 10px; }
+.lfp-tidy-details { margin-top: 4px; }
+.lfp-tidy-details summary { cursor: pointer; color: #2271b1; font-size: 12px; }
+.lfp-tidy-details code { display: block; margin-top: 4px; font-size: 11px; word-break: break-word; }
+
 @media (max-width: 782px) {
     .lfp-form-table th { width: auto; }
 }

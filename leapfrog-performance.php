@@ -2,8 +2,8 @@
 /**
  * Plugin Name:       Leapfrog Performance
  * Plugin URI:        https://github.com/leapfrog-media/leapfrog-performance
- * Description:       The Leapfrog Media performance and hardening plugin: removes what WordPress loads but your site doesn't use, holds the media settings, adds hardening beside FluentAuth and loads plugin files only where they are used, plus redirects, site access, search engine settings and rollback. Leapfrog > Leapfrog Performance.
- * Version:           0.6.0
+ * Description:       The Leapfrog Media performance and hardening plugin: removes what WordPress loads but your site doesn't use, holds the media settings, adds hardening beside FluentAuth and loads plugin files only where they are used, plus redirects, site access, search engine settings, rollback, scheduled tasks and tidying up. Leapfrog > Leapfrog Performance.
+ * Version:           0.7.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Leapfrog Media
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VERSION = '0.6.0';
+const VERSION = '0.7.0';
 const FILE = __FILE__;
 
 /** Settings screen: Leapfrog > Leapfrog Performance (admin.php?page=leapfrog-performance). */

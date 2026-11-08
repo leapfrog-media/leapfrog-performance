@@ -3,7 +3,7 @@ Contributors: Leapfrog Media
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.6.0
+Stable tag: 0.7.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,9 +21,12 @@ Each tab is a feature that can be switched off on the Features tab; a feature
 that is off loads no code.
 
 Bloat: emoji, embeds, RSS feeds, jQuery Migrate, Dashicons for visitors, head
-clutter, block editor CSS, WordPress lazy loading, site search, comments,
-pingbacks, revisions kept, Heartbeat (admin, editor, site), autosave interval,
-the admin email check, password change emails and auto-update emails.
+clutter, block editor CSS, WordPress lazy loading, site search, loading the
+next page early (speculative loading), Gravatar, the block editor's ready-made
+patterns, plugin suggestions and Openverse image search, the block editor for
+pages, comments, pingbacks, revisions kept, Heartbeat (admin, editor, site),
+autosave interval, the admin email check, password change emails and
+auto-update emails.
 
 Media: switch off media pages (and free up the page addresses media items
 hold), choose which image sizes are made and shown in the Bricks and media
@@ -45,6 +48,16 @@ skipped while the site isn't open. Search engines: robots.txt and what the
 WordPress sitemap lists. Rollback: earlier versions of WordPress.org plugins and
 themes.
 
+Scheduled tasks: shows when WordPress's scheduled tasks last ran from the host's
+timer and from page loads, and how many are late, with the command for a host
+timer (20i Scheduled Tasks). Once the timer runs, page loads can stop starting
+tasks; if the timer stops for two hours, page loads take over again.
+
+Tidy up: delete image copies in sizes that are no longer made (copies content
+still points to are kept), and settings and tables left behind by removed
+plugins (ASE, Disable Media Sizes, Core Framework, Adminify, Pixflow and others
+Leapfrog recognises), with how much loads on every page.
+
 == Moving from other plugins ==
 Features > Import settings lists what ASE, FlyingPress, Disable Media Pages,
 Disable Media Sizes and the Praxis mu-plugins do that Leapfrog's tabs cover,
@@ -53,8 +66,9 @@ offered, so nothing Leapfrog removes is put back. Afterwards, switch the same
 settings off in those plugins (or remove the mu-plugins).
 
 == Left to other plugins ==
-Log-in security (FluentAuth), image compression and resizing (ShortPixel),
-caching and CSS/JavaScript optimisation (FlyingPress).
+Log-in security, XML-RPC and application passwords (FluentAuth), image
+compression and resizing (ShortPixel), caching, CSS/JavaScript optimisation,
+link preloading and database clean-up (FlyingPress).
 
 == Updates ==
 Updates come from GitHub through WordPress's own updater (Dashboard > Updates,

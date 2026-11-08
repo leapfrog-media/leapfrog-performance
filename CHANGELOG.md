@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.0 — 2026-11-08
+
+Leaner sites: five additions from a check of what a lean site still loads.
+
+- **Bloat**, new settings:
+  - **Loading the next page early** (WordPress's speculative loading): WordPress's own, off, sooner (moderate prefetch) or fastest (moderate prerender). Logged-in people never get it. Skipped while FlyingPress's link preloading is on, because FlyingPress then switches WordPress's off and does it itself.
+  - **Gravatar** (on by default): no requests to gravatar.com. People without a picture chosen in Leapfrog Admin get a plain default picture (`assets/avatar.svg`).
+  - **In the block editor** (on by default): no ready-made patterns (remote patterns from WordPress.org and WordPress's own), no plugin suggestions (block directory), no Openverse image search. **Block editor for pages** (off by default): pages open in the classic editor, as they are built in Bricks.
+- **Scheduled tasks** tab: when tasks last ran from the host's timer and from page loads (each run of wp-cron.php is recorded: command-line runs and requests that aren't WordPress calling itself count as the host), how many are late, what wp-config.php says, and the 20i command (`wget` of wp-cron.php every 5 minutes). **Run tasks from the host's timer only** defines `DISABLE_WP_CRON`, but only while the host timer has run in the last two hours, so tasks never stop for good. Option `leapfrog_performance_cron_seen`.
+- **Tidy up** tab:
+  - **Image copies no longer made**: copies in sizes switched off on the Media tab, set to 0 × 0 under Settings > Media, or no longer added by anything, with their WebP/AVIF versions (WordPress's and ShortPixel's). Copies that posts, Bricks data or settings still point to are kept. Ticked sizes are deleted and removed from each image's metadata, in runs of up to 25 seconds.
+  - **Left behind by removed plugins**: settings (and their transients) and database tables of about 25 recognised plugins once none of their folders is installed, plus settings of themes no longer installed, with their size and how much loads on every page. Ticked plugins' leftovers are deleted.
+- The Bloat tab notes that XML-RPC and application passwords are switched off in FluentAuth.
+
 ## 0.6.0 — 2026-11-08
 
 - **Updates from GitHub**, shared with Leapfrog Admin and Leapfrog Framework: the plugin updates through WordPress's own updater from github.com/leapfrog-media/leapfrog-performance (the Version in the plugin file on the main branch; no tags). An **Updates** tab shows each Leapfrog plugin's versions and holds the GitHub token private repositories need (or `LEAPFROG_GITHUB_TOKEN` in wp-config.php). A Git working folder is never updated. Code: `includes/github-updater.php`, identical to Leapfrog Admin's apart from the namespace.
