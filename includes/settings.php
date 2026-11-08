@@ -57,6 +57,15 @@ function clean_value($value, array $field)
             return is_string($value) && isset($field['choices'][$value]) ? $value : null;
         case 'list':
             return is_array($value) ? array_values(array_filter(array_map('sanitize_key', $value))) : null;
+        case 'text':
+            return is_scalar($value) ? sanitize_text_field((string) $value) : null;
+        case 'textarea':
+            return is_scalar($value) ? sanitize_textarea_field((string) $value) : null;
+        case 'post':
+            return is_numeric($value) ? absint($value) : null;
+        case 'secret':
+            // Stored as a hash by the feature; the form never shows it.
+            return is_string($value) ? $value : null;
     }
     return null;
 }
@@ -68,6 +77,8 @@ function save_settings(string $feature, array $posted): void
     $all = is_array($all) ? $all : [];
     $values = settings($feature);
     foreach (field_definitions()[$feature] ?? [] as $key => $field) {
+        // A secret left empty keeps the saved one.
+        if ($field['type'] === 'secret' && ($posted[$key] ?? '') === '') { continue; }
         $raw = $posted[$key] ?? ($field['type'] === 'bool' ? false : ($field['type'] === 'list' ? [] : null));
         $clean = clean_value($raw, $field);
         if ($clean !== null) { $values[$key] = $clean; }

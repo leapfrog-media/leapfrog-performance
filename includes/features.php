@@ -42,6 +42,38 @@ function features(): array
             'boot' => __NAMESPACE__ . '\\assets_boot',
             'render' => __NAMESPACE__ . '\\render_assets_tab',
         ],
+        'redirects' => [
+            'label' => 'Redirects',
+            'description' => 'Send old addresses to new ones (one by one or from a CSV file) and log the missing addresses visitors ask for.',
+            'off' => 'No redirects happen and nothing is logged. Your redirects are kept.',
+            'files' => ['redirects.php'],
+            'boot' => __NAMESPACE__ . '\\redirects_boot',
+            'render' => __NAMESPACE__ . '\\render_redirects_tab',
+        ],
+        'access' => [
+            'label' => 'Site access',
+            'description' => 'Maintenance mode (with a Bricks template as the page) or one shared password for previews before launch.',
+            'off' => 'The site is open to everyone. Your settings are kept.',
+            'files' => ['access.php'],
+            'boot' => __NAMESPACE__ . '\\access_boot',
+            'render' => __NAMESPACE__ . '\\render_access_tab',
+        ],
+        'search' => [
+            'label' => 'Search engines',
+            'description' => 'Edit robots.txt, and choose what WordPress’s sitemap lists (no users sitemap).',
+            'off' => 'robots.txt and the sitemap are WordPress’s own again. Your settings are kept.',
+            'files' => ['search-engines.php'],
+            'boot' => __NAMESPACE__ . '\\search_engines_boot',
+            'render' => __NAMESPACE__ . '\\render_search_tab',
+        ],
+        'rollback' => [
+            'label' => 'Rollback',
+            'description' => 'Put a plugin or theme from WordPress.org back to an earlier version.',
+            'off' => 'The Rollback tab is hidden. Nothing else changes.',
+            'files' => ['rollback.php'],
+            'boot' => __NAMESPACE__ . '\\rollback_boot',
+            'render' => __NAMESPACE__ . '\\render_rollback_tab',
+        ],
     ];
 }
 
@@ -49,7 +81,6 @@ function features(): array
 function coming_features(): array
 {
     return [
-        '0.5' => 'Site tools: redirects and 404 log, maintenance mode, site password, robots.txt, sitemap, rollback',
     ];
 }
 

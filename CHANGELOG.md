@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0 — 2026-11-08
+
+Site tools, as four switchable tabs.
+
+- **Redirects**: add redirects one by one or import a CSV (`from,to[,code]`; full old addresses work), export them, and remove ticked ones. 301, 302 or 410 Gone. Sources match by path, ignoring case, query strings and the trailing slash; `/old/*` covers everything under /old/, and a `*` in the target carries the rest across (`/blog/*` → `/news/*`). Redirects only apply to addresses that don't exist, so a page always wins. Targets must start with / or be a full http(s) address. **Missing addresses** log (on by default): the last 200 not-found addresses with counts and where visitors came from, skipping attack probes, with "Add redirect" beside each. Options `leapfrog_performance_redirects`, `leapfrog_performance_404_log`.
+- **Site access**: open, **maintenance mode** (503 with Retry-After and noindex; a Bricks template as the page, or a simple page with your title and message; staff chosen by permission see the real site) or **behind a password** (one shared password, stored as a WordPress password hash; visitors stay let in for 30 days; logged-in people go straight in). The log-in page, admin, AJAX, cron, REST API and robots.txt stay open. While the site isn't open: a red reminder in the toolbar, pages aren't cached (FlyingPress and `DONOTCACHEPAGE`), and saving the tab empties FlyingPress's page cache (also WP Rocket, W3 Total Cache, LiteSpeed when present).
+- **Search engines**: your own robots.txt text (Settings > Reading's "discourage" still wins; a robots.txt file on disk is detected), WordPress's sitemap on or off, content types and category/tag lists left out, and no users sitemap (the standard).
+- **Rollback**: put a WordPress.org plugin or theme back to one of its last 30 versions through WordPress's own updater; a plugin that was active is switched back on afterwards.
+- Settings forms gained text, multi-line text, post picker and password ("secret") fields.
+
 ## 0.4.0 — 2026-11-08
 
 Load only where used, replacing the Praxis mu-plugin pl-latepoint-assets for any plugin.

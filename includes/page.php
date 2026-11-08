@@ -137,6 +137,19 @@ function render_fields_form(string $feature, array $sections, ?callable $extra =
                                         <option value="<?php echo esc_attr($value); ?>" <?php selected($values[$key], $value); ?>><?php echo esc_html($label); ?></option>
                                     <?php endforeach; ?>
                                 </select>
+                            <?php elseif ($field['type'] === 'text') : ?>
+                                <input type="text" class="regular-text" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr((string) $values[$key]); ?>" placeholder="<?php echo esc_attr($field['placeholder'] ?? ''); ?>">
+                            <?php elseif ($field['type'] === 'textarea') : ?>
+                                <textarea class="large-text<?php echo !empty($field['code']) ? ' code' : ''; ?>" rows="<?php echo (int) ($field['rows'] ?? 4); ?>" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($name); ?>" placeholder="<?php echo esc_attr($field['placeholder'] ?? ''); ?>"><?php echo esc_textarea((string) $values[$key]); ?></textarea>
+                            <?php elseif ($field['type'] === 'post') : ?>
+                                <select id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($name); ?>">
+                                    <option value="0"><?php echo esc_html($field['none'] ?? '— None —'); ?></option>
+                                    <?php foreach (get_posts(['post_type' => $field['post_type'], 'post_status' => 'publish', 'numberposts' => 200, 'orderby' => 'title', 'order' => 'ASC']) as $post) : ?>
+                                        <option value="<?php echo (int) $post->ID; ?>" <?php selected((int) $values[$key], (int) $post->ID); ?>><?php echo esc_html($post->post_title ?: '#' . $post->ID); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php elseif ($field['type'] === 'secret') : ?>
+                                <input type="password" class="regular-text" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($name); ?>" value="" autocomplete="new-password" placeholder="<?php echo esc_attr($values[$key] !== '' ? 'Saved (type a new one to change it)' : ($field['placeholder'] ?? '')); ?>">
                             <?php elseif ($field['type'] === 'list') : ?>
                                 <input type="hidden" name="<?php echo esc_attr($name); ?>[]" value="">
                                 <fieldset id="<?php echo esc_attr($id); ?>">
