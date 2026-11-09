@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) { exit; }
 const MENU_SLUG = 'leapfrog';
 // Admin first: clicking Leapfrog opens it with the sub-items expanded beneath.
 // (Framework is a full-screen editor without the sidebar, so it can't come first.)
-const MENU_ORDER = ['leapfrog-admin' => 1, 'leapfrog-framework' => 2, 'leapfrog-header' => 3, 'leapfrog-performance' => 4];
+const MENU_ORDER = ['leapfrog-admin' => 1, 'leapfrog-framework' => 2, 'leapfrog-navigation' => 3, 'leapfrog-performance' => 4];
 
 function leapfrog_menu(): void
 {

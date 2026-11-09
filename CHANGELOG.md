@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.2 — 2026-11-09
+
+- The shared Leapfrog menu orders Leapfrog Framework's Navigation Builder (formerly Header Builder) after Leapfrog Framework.
+
 ## 0.7.1 — 2026-11-08
 
 - The shared Leapfrog menu orders Leapfrog Framework's new Header Builder after Leapfrog Framework (the order list is the same in every Leapfrog plugin).
